@@ -21,5 +21,5 @@ const connectWithMongooseAndServer = async () => {
     console.log('Ошибка при подключении: ' + error.toString());
   }
 };
-//
+//todo
 connectWithMongooseAndServer();
