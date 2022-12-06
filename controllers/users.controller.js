@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
+
 module.exports.userController = {
   getAllUsers: async (req, res) => {
     try {
