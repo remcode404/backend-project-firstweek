@@ -4,7 +4,7 @@ module.exports.categoryController = {
   getAllCategory: async (req, res) => {
     try {
       const category = await Category.find();
-      res.json(Category);
+      res.json(category);
     } catch (e) {
       res.json({ e: e.message });
     }
