@@ -1,43 +1,54 @@
 const Basket = require("../models/Basket.model");
 
-module.exports.postsController = {
-  createBasket: async (req, res) => {
+module.exports.basketController = {
+  // Добавление товара в корзину:
+  addBasket: async (req, res) => {
     try {
       const { userId, productId } = req.body;
-      const data =await Basket.create({
+      const data = await Basket.create({
         userId,
         productId,
       });
-      const prod = await Basket.findById(data._id).populate()
-      res.json("Товар добавлен");
+      res.json(data);
     } catch (err) {
       res.json(err);
     }
   },
-
-//   like: async (req, res) => {
-//     // Указывается postId  и передается userId пользователя который ставит лайк, если пользователь уже поставил ранее лайк, лайк убирается
-//     try {
-//       const post = await Post.findById(req.params.id);
-//       if (!post.likes.includes(req.body.userId)) {
-//         await post.updateOne({ $push: { likes: req.body.userId } });
-//         res.json("The post has been liked");
-//       } else {
-//         await post.updateOne({ $pull: { likes: req.body.userId } });
-//         res.json("The post has been disliked");
-//       }
-//     } catch (err) {
-//       res.json(err);
-//     }
-//   },
-
-//   getLikedPosts: async (req, res) => {
-//     // Вывод всех понравивших постов пользователю
-//     try {
-//       const result = await Post.find({ likes: req.params.id });
-//       res.json(result);
-//     } catch (err) {
-//       res.json(err);
-//     }
-//   },
+  // Изменение товара в корзине:
+  editBasket: async (req, res) => {
+    try {
+      if (req.body.type === 'plus') {
+        const data = await Basket.findById(
+          req.params.id
+        );
+        const addProduct = data.map( item =>  {
+          if (item.productId.toString() === req.body.productId) {
+            item.amount +=1
+          }
+          return item
+        })
+        const result = await data.updateOne(addProduct, {new: true})
+        res.json(result);
+      } else {
+        const data = await Basket.findByIdAndUpdate(
+          req.params.id,
+          {
+            amount: amount -1
+          },
+        );
+        res.json(data);
+      }
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
+  // Удаление товара из корзины:
+  deleteBasket: async (req, res) => {
+    try {
+      await Basket.findByIdAndRemove(req.params.id);
+      res.json("Удалено");
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
 };
