@@ -1,10 +1,11 @@
 const jsonwebtoken = require('jsonwebtoken')
 
 module.exports = async (req, res, next) => {
-  const { aurthorization } = req.headers
+
+  const { authorization } = req.headers
 
   if (!authorization)
-    return res.status(401).json({error: "Поле в headers с авторизацией пусто"});
+    return res.status(401).json({error: "Вы не авторизованы"});
 
   const [type, token] = authorization.split(" ");
 
@@ -18,7 +19,7 @@ module.exports = async (req, res, next) => {
     console.log(process.env.SECRET_JWT_KEY);
 
     next()
-  } catch (e) {
-    return res.status(401).json({error: "Ошибки в авторизации" + e.toString()});
+  } catch (error) {
+    return res.status(401).json({error: "Ошибки в авторизации " + error.toString()});
   }
 };

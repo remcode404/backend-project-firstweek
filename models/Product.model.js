@@ -5,7 +5,10 @@ const productSchema = mongoose.Schema({
   price: Number,
   weight: String,
   img: String,
+  categoryId: [{ type: mongoose.SchemaTypes.ObjectId, ref: "Category" }]
+  
 });
+
 
 const Product = mongoose.model("Product", productSchema);
 
