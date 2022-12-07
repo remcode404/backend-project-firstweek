@@ -16,12 +16,14 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: true, 
   },
-  roles: [{
-    type: String,
-    ref: "Role",
-  }],
+  roles: [
+    {
+      type: String,
+      ref: "Role",
+    },    
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

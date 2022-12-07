@@ -12,7 +12,7 @@ app.use(cors());
 app.use(require('./routes'))
 
 const { MONGOOSE_URL, PORT } = process.env;
-
+console.log(PORT);
 const connectWithMongooseAndServer = async () => {
   try {
     await mongoose.connect(MONGOOSE_URL);

@@ -1,43 +1,74 @@
 const Basket = require("../models/Basket.model");
+// const Product = require("../models/Product.model");
+// const { findById } = require("../models/Users.model");
+// const User = require("../models/Users.model");
 
-module.exports.postsController = {
-  createBasket: async (req, res) => {
+module.exports.basketController = {
+  // ВЫВОД КОРЗИНЫ
+  getBusketByUser: async (req, res) => {
     try {
-      const { userId, productId } = req.body;
-      const data =await Basket.create({
-        userId,
-        productId,
-      });
-      const prod = await Basket.findById(data._id).populate()
-      res.json("Товар добавлен");
-    } catch (err) {
-      res.json(err);
+      const data = await Basket.findOne({ userId: req.params.id });
+      return res.json(data);
+    } catch (error) {
+      res.json({ error: error.message });
     }
   },
+  // ДОБАВЛЕНИЕ ТОВАРА В КОРЗИНУ
+  addProductToBasket: async (req, res) => {
+    try {
+      const { product } = req.body;
+      const data = await Basket.findByIdAndUpdate(req.params.id, {
+        $push: {
+          products: product,
+        },
+      });
+      res.json(data);
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
+  // ИЗМЕНЕНИЕ СЧЕТЧИКА AMOUNT
+  editAmount: async (req, res) => {
+    try {
+      // НАХОДИМ НАШУ КОРЗИНУ
+      const basket = await Basket.findById(req.params.id);
+      const type = req.body.type;
 
-//   like: async (req, res) => {
-//     // Указывается postId  и передается userId пользователя который ставит лайк, если пользователь уже поставил ранее лайк, лайк убирается
-//     try {
-//       const post = await Post.findById(req.params.id);
-//       if (!post.likes.includes(req.body.userId)) {
-//         await post.updateOne({ $push: { likes: req.body.userId } });
-//         res.json("The post has been liked");
-//       } else {
-//         await post.updateOne({ $pull: { likes: req.body.userId } });
-//         res.json("The post has been disliked");
-//       }
-//     } catch (err) {
-//       res.json(err);
-//     }
-//   },
+      // НАХОДИМ НАШ ЭЛЕМЕНТ И МЕНЯЕМ АМОУНТ НА + 1, И СОХРАНЯЕМ НОВЫЙ МАССИВ В НАШУ ПЕРЕМЕННУЮ
+      const newData = await basket.products.map((item) => {
+        if (
+          item._id.toString() === req.body.productId.toString() &&
+          type === "plus"
+        ) {
+          item.amount += 1;
+        } else if (
+          item._id.toString() === req.body.productId.toString() &&
+          type === "minus"
+        ) {
+          item.amount -= 1;
+        }
+        return item;
+      });
 
-//   getLikedPosts: async (req, res) => {
-//     // Вывод всех понравивших постов пользователю
-//     try {
-//       const result = await Post.find({ likes: req.params.id });
-//       res.json(result);
-//     } catch (err) {
-//       res.json(err);
-//     }
-//   },
+      // ОБРАЩАЕМСЯ К КОРЗИНЕ И ЗАМЕНЯЕМ ЗНАЧЕНИЕ КЛЮЧА PRODUCTS НА НОВЫЙ НАШ ИЗМЕНЕННЫЙ МАССИВ
+      await basket.updateOne({ products: newData });
+
+      res.json(basket);
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
+  // УДАЛЕНИЕ ТОВАРА ИЗ КОРЗИНЫ
+  deleteBasket: async (req, res) => {
+    try {
+      const data = await Basket.findByIdAndUpdate(req.params.id, {
+        $pull: {
+          products: { _id: req.body.productId },
+        },
+      });
+      res.json(data);
+    } catch (error) {
+      res.json({ error: error.message });
+    }
+  },
 };
