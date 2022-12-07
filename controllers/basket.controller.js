@@ -30,7 +30,7 @@ module.exports.basketController = {
   // ИЗМЕНЕНИЕ СЧЕТЧИКА AMOUNT
   editAmount: async (req, res) => {
     try {
-      // НАХОДИМ НАШУ КОРЗИНУ
+      // НАХОДИМ НАШУ КОРЗИНУю
       const basket = await Basket.findById(req.params.id);
       const type = req.body.type;
 
