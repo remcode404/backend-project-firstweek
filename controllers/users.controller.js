@@ -76,7 +76,7 @@ module.exports.userController = {
       const { phone, email, password } = req.body;
 
       if((!!email && !!phone) || (!email && !phone)){
-        return res.status(401).json("Следует указать либо адрес электронной почты, либо номер телефона.");
+        return res.status(401).json("Следует указать адрес электронной почты, либо номер телефона.");
       }
       const candidate = await User.findOne(phone ? {phone}: {email} );
 

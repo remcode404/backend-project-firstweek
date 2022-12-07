@@ -1,7 +1,7 @@
 const jsonwebtoken = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
-    
+
   const { authorization } = req.headers;
 
   if (!authorization)
@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
     return res.status(401).json({ error: "Неверный тип токена" });
 
   try {
-    const { roles: userRoles } = await jsonwebtoken.verify(
+    const { roles: userRoles } = jsonwebtoken.verify(
       token,
       process.env.SECRET_JWT_KEY
     );
