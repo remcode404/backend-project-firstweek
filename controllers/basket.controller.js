@@ -18,7 +18,7 @@ module.exports.basketController = {
     try {
       const { product } = req.body;
       const data = await Basket.findByIdAndUpdate(req.params.id, {
-        $push: {
+        $addToSet: {
           products: product,
         },
       });
