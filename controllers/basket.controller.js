@@ -1,7 +1,5 @@
 const Basket = require("../models/Basket.model");
-// const Product = require("../models/Product.model");
-// const { findById } = require("../models/Users.model");
-// const User = require("../models/Users.model");
+
 
 module.exports.basketController = {
   // ВЫВОД КОРЗИНЫ
