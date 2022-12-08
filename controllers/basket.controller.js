@@ -1,7 +1,5 @@
 const Basket = require("../models/Basket.model");
-// const Product = require("../models/Product.model");
-// const { findById } = require("../models/Users.model");
-// const User = require("../models/Users.model");
+
 
 module.exports.basketController = {
   // ВЫВОД КОРЗИНЫ
@@ -18,7 +16,7 @@ module.exports.basketController = {
     try {
       const { product } = req.body;
       const data = await Basket.findByIdAndUpdate(req.params.id, {
-        $push: {
+        $addToSet: {
           products: product,
         },
       });
