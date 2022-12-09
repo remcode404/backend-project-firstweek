@@ -79,7 +79,7 @@ module.exports.userController = {
       if((!!email && !!phone) || (!email && !phone)){
         return res.status(401).json("Следует указать адрес электронной почты, либо номер телефона.");
       }
-      const candidate = await User.findOne(phone ? {phone}: {email} );
+      const candidate = await User.findOne(email ? {email}: {phone} );
 
       if (!candidate ) {
         return res.status(401).json("Учетные данные недействительны!");
@@ -91,8 +91,8 @@ module.exports.userController = {
       }
 
       const payload = {
-        phone: candidate.phone,
         id: candidate._id,
+        phone: candidate.phone,
         email: candidate.email,
         roles: candidate.roles,
       };
