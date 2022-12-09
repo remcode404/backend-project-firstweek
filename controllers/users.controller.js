@@ -3,6 +3,7 @@ const Role = require("../models/Roles.model");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+const Basket = require("../models/Basket.model");
 
 
 module.exports.userController = {
@@ -89,6 +90,12 @@ module.exports.userController = {
       if (!valid) {
         return res.status(401).json("Неверный пароль");
       }
+
+      const basket = await Basket.findOne({userId: candidate._id})
+      if (basket === null) {
+        await Basket.create({userId: candidate._id})
+      }
+      console.log("basket", basket);
 
       const payload = {
         id: candidate._id,

@@ -6,11 +6,15 @@ const basketSchema = mongoose.Schema({
     type: SchemaTypes.ObjectId,
     ref: "User",
   },
-  productId: {
-    type: SchemaTypes.ObjectId,
-    ref: "Product",
-  },
-  amount: Number,
+  products: [
+    {
+      productId: {
+        type: SchemaTypes.ObjectId,
+        ref: "Product"
+      },
+      amount:{type: Number, default: 1},
+    },
+  ],
   total: Number,
 });
 
